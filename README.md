@@ -14,5 +14,5 @@ example application based on https://github.com/webjames/sails-passport-example
 
 
 ### ToDo
-    - Store sessions in MongoDB
-    - Implement Twitter, Google, Facebook auth
+- Store sessions in MongoDB
+- Implement Twitter, Google, Facebook auth
