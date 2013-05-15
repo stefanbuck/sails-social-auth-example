@@ -28,15 +28,13 @@ module.exports.routes = {
 	},
 
     '/login' : {
-        controller : 'auth'
+        controller : 'auth',
+        action      : 'index'
     },
 
     '/logout' : {
-        controller : 'auth'
-    },
-
-    '/github' : {
-        controller : 'auth'
+        controller : 'auth',
+        action      : 'logout'
     }
 
 	// If you want to set up a route only for a particular HTTP method/verb 

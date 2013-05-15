@@ -24,5 +24,13 @@ module.exports.auth = {
         clientID: "YOUR-CLIENT-ID",
         clientSecret: "YOUR-CLIENT-SECRET",
         callbackURL:"http://localhost:1337/auth/github/callback"
-    }
+    },
+
+    // Create an application here: https://code.google.com/apis/console/
+
+    google: {
+        clientID: "YOUR-CLIENT-ID",
+        clientSecret: "YOUR-CLIENT-SECRET",
+        callbackURL:"http://localhost:1337/auth/google/callback"
+    },
 }

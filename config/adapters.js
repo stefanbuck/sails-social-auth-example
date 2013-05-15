@@ -37,6 +37,6 @@ module.exports.adapters = {
 
     mongo: {
         module   : 'sails-mongo',
-        url      : 'mongodb://localhost/sails-passport-mongodb-example'
+        url      : 'mongodb://localhost/sails-social-auth-example'
     }
 };

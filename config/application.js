@@ -1,5 +1,6 @@
 var passport = require('passport')
-    , GitHubStrategy = require('passport-github').Strategy;
+    , GitHubStrategy = require('passport-github').Strategy
+    , GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 
 var verifyHandler = function (token, tokenSecret, profile, done) {
@@ -14,6 +15,7 @@ var verifyHandler = function (token, tokenSecret, profile, done) {
                     name: profile.displayName
                 }).done(function (err, user) {
                         if (err) {
+                            console.log(user);
                             throw err;
                         }
                         return done(null, user);
@@ -76,6 +78,15 @@ module.exports = {
                 },
                 verifyHandler
             ));
+
+            passport.use(new GoogleStrategy({
+                    clientID: sails.config.auth.google.clientID,
+                    clientSecret: sails.config.auth.google.clientSecret,
+                    callbackURL: sails.config.auth.google.callbackURL
+                },
+                verifyHandler
+            ));
+
             app.use(passport.initialize());
             app.use(passport.session());
         }

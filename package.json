@@ -7,7 +7,8 @@
         "sails": "0.8.895",
         "sails-mongo": "latest",
         "passport": "0.1.16",
-        "passport-github": "0.1.5"
+        "passport-github": "0.1.5",
+        "passport-google-oauth": "0.1.5"
     },
     "scripts": {
         "start": "node .app.js",
