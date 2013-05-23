@@ -72,7 +72,7 @@ module.exports = {
     session: {
         secret: 'TOP_SECRET',
         cookie: {
-            originalMaxAge: 60000
+            originalMaxAge: 900000 // 15 min
         },
         store: new MongoStore({
             db: 'sails-social-auth-example'
