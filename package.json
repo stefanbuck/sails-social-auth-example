@@ -4,13 +4,13 @@
     "version": "0.0.0",
     "description": "a Sails application",
     "dependencies": {
-        "sails": "0.8.895",
+        "sails": "0.8.91",
         "sails-mongo": "latest",
-        "passport": "0.1.16",
-        "passport-github": "0.1.5",
-        "passport-google-oauth": "0.1.5",
-        "connect-mongo": "0.3.2",
-        "express": "3.2.5"
+        "passport": "latest",
+        "passport-github": "latest",
+        "passport-google-oauth": "latest",
+        "connect-mongo": "latest",
+        "express": "latest"
     },
     "scripts": {
         "start": "node .app.js",
