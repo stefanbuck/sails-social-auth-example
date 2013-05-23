@@ -1,6 +1,8 @@
 var passport = require('passport')
     , GitHubStrategy = require('passport-github').Strategy
-    , GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+    , GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
+    , express = require('express')
+    , MongoStore = require('connect-mongo')(express);
 
 
 var verifyHandler = function (token, tokenSecret, profile, done) {
@@ -66,6 +68,16 @@ module.exports = {
 	},
 
     auth: {},
+
+    session: {
+        secret: 'TOP_SECRET',
+        cookie: {
+            originalMaxAge: 60000
+        },
+        store: new MongoStore({
+            db: 'sails-social-auth-example'
+        })
+    },
 
     // Init custom express middleware
     express: {

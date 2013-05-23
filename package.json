@@ -8,7 +8,9 @@
         "sails-mongo": "latest",
         "passport": "0.1.16",
         "passport-github": "0.1.5",
-        "passport-google-oauth": "0.1.5"
+        "passport-google-oauth": "0.1.5",
+        "connect-mongo": "0.3.2",
+        "express": "3.2.5"
     },
     "scripts": {
         "start": "node .app.js",

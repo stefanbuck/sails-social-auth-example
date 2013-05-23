@@ -21,16 +21,16 @@ module.exports.auth = {
     // YOUR-CLIENT-SECRET with the generated keys.
 
     github: {
-        clientID: "YOUR-CLIENT-ID",
-        clientSecret: "YOUR-CLIENT-SECRET",
+        clientID: "YOUR_CLIENT_ID",
+        clientSecret: "YOUR_CLIENT_SECRET",
         callbackURL:"http://localhost:1337/auth/github/callback"
     },
 
     // Create an application here: https://code.google.com/apis/console/
 
     google: {
-        clientID: "YOUR-CLIENT-ID",
-        clientSecret: "YOUR-CLIENT-SECRET",
+        clientID: "YOUR_CLIENT_ID",
+        clientSecret: "YOUR_CLIENT_SECRET",
         callbackURL:"http://localhost:1337/auth/google/callback"
-    },
+    }
 }

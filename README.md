@@ -17,5 +17,4 @@ example application based on https://github.com/webjames/sails-passport-example
     8. Open http://localhost:1337 in your favorite browser
 
 ## ToDo
-- Store sessions in MongoDB
 - Implement Twitter, Facebook strategies
