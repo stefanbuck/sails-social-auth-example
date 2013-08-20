@@ -1,0 +1,100 @@
+<!-- Default home page -->
+<!-- <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,700italic,400,300,700' rel='stylesheet'/> -->
+<link href='http://sailsjs.org/styles/fonts.css' rel='stylesheet'/>
+<link href='styles/main.css' rel='stylesheet'/>
+<!--[if IE 7]>
+<link href='styles/ie7.css' rel='stylesheet'/>
+<![endif]-->
+
+<div class="top-bar">
+    <div class="container clearfix">
+        <img class="logo" src="http://sailsjs.org/images/sails-logo.jpg" />
+    </div>
+</div>
+
+<div class="container clearfix">
+    <div class="main">
+        <h1 id="main-title">Hi <%= user.name %>,</h1>
+        <p>You've successfully logged in.</p>
+        <a class="btn" href="/logout">Logout</a>
+
+        <h2>User Model</h2>
+        <table class="table">
+            <% for(key in user.toJSON() ) { %>
+            <tr>
+                <td><%= key %>: </td>
+                <td class="boxy"><%= user[key] %></td>
+            </tr>
+            <% } %>
+        </table>
+
+        <h2>Getting started</h2>
+        <p>Don't worry, we've got your back.</p>
+        <div class="steps">
+            <ul class="getting-started">
+                <li>
+                    <div class="sprite one"></div>
+                    <div>
+                        <h3>Get your API going.</h3>
+                        <p>
+                            Run <span class="boxy">sails generate foo</span>.  This will create a model <span class="boxy">Foo</span> and controller <span class="boxy">FooController</span>
+                        </p>
+                    </div>
+                </li>
+                <li>
+                    <div class="sprite two"></div>
+                    <div>
+                        <h3>
+                            Lift your app.
+                        </h3>
+                        <p>
+                            Run <span class="boxy">sails lift</span> to start up your app.  If you visit <span class="boxy">http://localhost:1337/foo</span> in your browser, you'll see a socket.io-compatible REST API was generated for your 'Foo' model.
+                        </p>
+                    </div>
+                </li>
+                <li>
+                    <div class="sprite three"></div>
+                    <div>
+                        <h3>
+                            Dive in and start building.
+                        </h3>
+                        <p>From here, you can modify your models, create custom controller methods as Express middleware, and create custom routes (routes are set up in <span class="boxy">config/routes.js</span>).  Visit <a href="http://sailsjs.org">the Sails website</a> for more information on next steps.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="delete">
+            <div class="sprite">You're looking at: <span class="boxy">views/home/index.ejs</span></div>
+        </div>
+    </div>
+    <div class="side-bar">
+        <h4 id="new">
+            New to Sails?
+        </h4>
+        <ul>
+            <li>
+                <a href="http://sailsjs.org">Visit sailsjs.org</a>
+            </li>
+            <li>
+                <a href="http://sailsjs.org/#documentation">Documentation</a>
+            </li>
+        </ul>
+        <h4>
+            Next Steps
+        </h4>
+        <ul>
+            <li class="sprite single_page">
+                <a target="_blank" href="http://sailsjs.org">Build a single page app</a>
+            </li>
+            <li class="sprite traditional">
+                <a target="_blank" href="http://sailsjs.org">Build a traditional webapp</a>
+            </li>
+            <li class="sprite realtime">
+                <a target="_blank" href="http://sailsjs.org">Build a realtime app</a>
+            </li>
+            <li class="sprite api">
+                <a target="_blank" href="http://sailsjs.org">Build an API</a>
+            </li>
+        </ul>
+    </div>
+</div>
