@@ -41,6 +41,29 @@ var AuthController = {
             })(req, res);
     },
 
+    'facebook': function (req, res) {
+        passport.authenticate('facebook', { failureRedirect: '/login' },
+            function (err, user) {
+                req.logIn(user, function (err) {
+                    if (err) {
+                        console.log(err);
+                        res.view('500');
+                        return;
+                    }
+
+                    res.redirect('/');
+                    return;
+                });
+            })(req, res);
+    },
+
+    'facebook/callback': function (req, res) {
+        passport.authenticate('facebook',
+            function (req, res) {
+                res.redirect('/');
+            })(req, res);
+    },
+
     'google': function (req, res) {
         passport.authenticate('google', { failureRedirect: '/login', scope:['https://www.googleapis.com/auth/plus.login','https://www.googleapis.com/auth/userinfo.profile'] },
             function (err, user) {
