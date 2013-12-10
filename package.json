@@ -1,25 +1,26 @@
 {
-    "name": "sails-social-auth-example",
-    "private": true,
-    "version": "0.0.0",
-    "description": "a Sails application",
-    "dependencies": {
-        "sails": "0.9.3",
-        "grunt": "0.4.1",
-        "sails-disk": "~0.9.0",
-        "ejs": "0.8.4",
-        "optimist": "0.3.4",
-        "passport": "0.1.17",
-        "passport-github": "0.1.5",
-        "passport-google-oauth": "0.1.5",
-        "sails-mongo": "0.9.3"
-    },
-    "scripts": {
-        "start": "node app.js",
-        "debug": "node debug app.js"
-    },
-    "main": "app.js",
-    "repository": "",
-    "author": "",
-    "license": ""
+  "name": "sails-social-auth-example",
+  "private": true,
+  "version": "0.0.0",
+  "description": "a Sails application",
+  "dependencies": {
+    "sails": "0.9.3",
+    "grunt": "0.4.1",
+    "sails-disk": "~0.9.0",
+    "ejs": "0.8.4",
+    "optimist": "0.3.4",
+    "passport": "0.1.17",
+    "passport-github": "0.1.5",
+    "passport-google-oauth": "0.1.5",
+    "sails-mongo": "0.9.3",
+    "passport-facebook": "~1.0.2"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "debug": "node debug app.js"
+  },
+  "main": "app.js",
+  "repository": "",
+  "author": "",
+  "license": ""
 }
