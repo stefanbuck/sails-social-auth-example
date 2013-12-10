@@ -1,8 +1,9 @@
 # Sails.js Social Auth example with Passport and MongoDB
 
-## Available authentication strategies
-- Google+
-- GitHub
+## Requirements
+
+- node >= 0.10.0
+- MongoDB
 
 ## Setup
 
@@ -10,11 +11,38 @@
 2. `cd sails-social-auth-example`
 3. `npm install`
 4. Start your MongoDB from the command line `sudo mongod`
-5. Create an GitHub application here: https://github.com/settings/applications/new
-6. Define the application Name, URL (http://localhost:1337) and Callback URL (http://localhost:1337/auth/github/callback)
-7. In the `config/middleware.js` replace `YOUR_CLIENT_ID` and `YOUR_CLIENT_SECRET` with the generated keys
+5. Setup your strategies
+   - [Google+](#google)
+   - [GitHub](#github)
+   - [Facebook](#facebook)
 8. `sails lift`
 9. Open `http://localhost:1337` in your favorite browser
+
+## Available authentication strategies
+
+### Google+
+1. Create a new app [here](https://cloud.google.com/console#/project)
+   - Name ```sails-social-auth-example```
+   - URL ```http://localhost:1337```
+   - Callback URL ```http://localhost:1337/auth/google/callback```
+1. In the `config/middleware.js` replace `YOUR_CLIENT_ID` and `YOUR_CLIENT_SECRET` with the generated keys
+
+### GitHub
+1. Create a new app [here](https://github.com/settings/applications/new)
+   - Name ```sails-social-auth-example```
+   - URL ```http://localhost:1337```
+   - Callback URL ```http://localhost:1337/auth/github/callback```
+1. In the `config/middleware.js` replace `YOUR_CLIENT_ID` and `YOUR_CLIENT_SECRET` with the generated keys
+
+### Facebook
+
+1. Create a new app [here](https://developers.facebook.com/apps)
+   - Name ```sails-social-auth-example```
+   - URL ```http://localhost:1337```
+   - Callback URL ```http://localhost:1337/auth/facebook/callback```
+1. In the `config/middleware.js` replace `YOUR_CLIENT_ID` and `YOUR_CLIENT_SECRET` with the generated keys
+
+
 
 ## License
 
