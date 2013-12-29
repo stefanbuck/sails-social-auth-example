@@ -19,7 +19,6 @@ var AuthController = {
     },
 
     github: function (req, res) {
-      console.log("AAA")
         passport.authenticate('github', { failureRedirect: '/login' },
             function (err, user) {
                 req.logIn(user, function (err) {
@@ -52,7 +51,6 @@ var AuthController = {
     },
 
     google: function (req, res) {
-      console.log("aaa")
         passport.authenticate('google', { failureRedirect: '/login', scope:['https://www.googleapis.com/auth/plus.login','https://www.googleapis.com/auth/userinfo.profile'] },
             function (err, user) {
                 req.logIn(user, function (err) {
