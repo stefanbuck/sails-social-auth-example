@@ -18,7 +18,8 @@ var AuthController = {
         res.redirect('/');
     },
 
-    'github': function (req, res) {
+    github: function (req, res) {
+      console.log("AAA")
         passport.authenticate('github', { failureRedirect: '/login' },
             function (err, user) {
                 req.logIn(user, function (err) {
@@ -34,14 +35,7 @@ var AuthController = {
             })(req, res);
     },
 
-    'github/callback': function (req, res) {
-        passport.authenticate('github',
-            function (req, res) {
-                res.redirect('/');
-            })(req, res);
-    },
-
-    'facebook': function (req, res) {
+    facebook: function (req, res) {
         passport.authenticate('facebook', { failureRedirect: '/login' },
             function (err, user) {
                 req.logIn(user, function (err) {
@@ -57,14 +51,8 @@ var AuthController = {
             })(req, res);
     },
 
-    'facebook/callback': function (req, res) {
-        passport.authenticate('facebook',
-            function (req, res) {
-                res.redirect('/');
-            })(req, res);
-    },
-
-    'google': function (req, res) {
+    google: function (req, res) {
+      console.log("aaa")
         passport.authenticate('google', { failureRedirect: '/login', scope:['https://www.googleapis.com/auth/plus.login','https://www.googleapis.com/auth/userinfo.profile'] },
             function (err, user) {
                 req.logIn(user, function (err) {
@@ -78,14 +66,6 @@ var AuthController = {
                     return;
                 });
             })(req, res);
-    },
-
-    'google/callback': function (req, res) {
-        passport.authenticate('google',
-            function (req, res) {
-                res.redirect('/');
-            })(req, res);
     }
-
 };
 module.exports = AuthController;
