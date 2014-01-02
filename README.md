@@ -68,5 +68,5 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/stefanbuck/sails-social-auth-example/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+[![Analytics](https://ga-beacon.appspot.com/UA-40473036-6/sails-social-auth-example/readme?pixel)
 
