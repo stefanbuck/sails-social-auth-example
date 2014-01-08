@@ -5,6 +5,9 @@ var passport = require('passport')
 
 
 var verifyHandler = function (token, tokenSecret, profile, done) {
+
+    console.log(profile)
+
     process.nextTick(function () {
 
         User.findOne({
@@ -60,24 +63,24 @@ module.exports = {
         customMiddleware: function (app) {
 
             passport.use(new GitHubStrategy({
-                    clientID: "YOUR_CLIENT_ID",
-                    clientSecret: "YOUR_CLIENT_SECRET",
+                    clientID: "71e7be5ac31ed2f2c27e",
+                    clientSecret: "7ed52d06df5c0eab13bb92cfc4c89bc72fdb23b1",
                     callbackURL: "http://localhost:1337/auth/github/callback"
                 },
                 verifyHandler
             ));
 
             passport.use(new FacebookStrategy({
-                    clientID: "YOUR_CLIENT_ID",
-                    clientSecret: "YOUR_CLIENT_SECRET",
+                    clientID: "1403117723260953",
+                    clientSecret: "b5c90798fb0b6fa7b5a3532b6da3c9a4",
                     callbackURL: "http://localhost:1337/auth/facebook/callback"
                 },
                 verifyHandler
             ));
 
             passport.use(new GoogleStrategy({
-                    clientID: 'YOUR_CLIENT_ID',
-                    clientSecret: 'YOUR_CLIENT_SECRET',
+                    clientID: "1028864568307-m7s8o9jvirtq3lohkh4kaf4f6gqk8k3e.apps.googleusercontent.com",
+                    clientSecret: "Z6FtTDyEFkddT1myiVc4SUlo",
                     callbackURL: 'http://localhost:1337/auth/google/callback'
                 },
                 verifyHandler

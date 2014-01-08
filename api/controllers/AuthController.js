@@ -18,6 +18,8 @@ var AuthController = {
         res.redirect('/');
     },
 
+    // http://developer.github.com/v3/
+    // http://developer.github.com/v3/oauth/#scopes
     github: function (req, res) {
         passport.authenticate('github', { failureRedirect: '/login' },
             function (err, user) {
@@ -34,8 +36,10 @@ var AuthController = {
             })(req, res);
     },
 
+    // https://developers.facebook.com/docs/
+    // https://developers.facebook.com/docs/reference/login/
     facebook: function (req, res) {
-        passport.authenticate('facebook', { failureRedirect: '/login' },
+        passport.authenticate('facebook', { failureRedirect: '/login', scope: ['email'] },
             function (err, user) {
                 req.logIn(user, function (err) {
                     if (err) {
@@ -50,8 +54,10 @@ var AuthController = {
             })(req, res);
     },
 
+    // https://developers.google.com/
+    // https://developers.google.com/accounts/docs/OAuth2Login#scope-param
     google: function (req, res) {
-        passport.authenticate('google', { failureRedirect: '/login', scope:['https://www.googleapis.com/auth/plus.login','https://www.googleapis.com/auth/userinfo.profile'] },
+        passport.authenticate('google', { failureRedirect: '/login', scope:['https://www.googleapis.com/auth/plus.login','https://www.googleapis.com/auth/userinfo.profile','https://www.googleapis.com/auth/userinfo.email'] },
             function (err, user) {
                 req.logIn(user, function (err) {
                     if (err) {
