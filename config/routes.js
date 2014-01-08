@@ -95,13 +95,14 @@ module.exports.routes = {
 
 
   // What about the ever-popular "vanity URLs" aka URL slugs?
-  // (you remember doing this with `mod_rewrite` in PHP)
+  // (you might remember doing this with `mod_rewrite` in Apache)
   //
   // This is where you want to set up root-relative dynamic routes like:
-  // http://yourwebsite.com/twinkletoezz993
+  // http://yourwebsite.com/twinkletoez
   //
-  // You still want to allow requests through to the static assets,
-  // So we need to set up this route to allow URLs through that have a trailing ".":
+  // NOTE:
+  // You'll still want to allow requests through to the static assets,
+  // so we need to set up this route to ignore URLs that have a trailing ".":
   // (e.g. your javascript, CSS, and image files)
   'get /*(^.*)': 'UserController.profile'
 
@@ -110,7 +111,12 @@ module.exports.routes = {
 
 
 
-/** (3) Action blueprints * * These routes can be disabled by setting( in config / controllers.js): * `module.exports.controllers.blueprints.actions = false` * * All of your controllers ' actions are automatically bound to a route.  For example:
+/** 
+ * (3) Action blueprints
+ * These routes can be disabled by setting (in `config/controllers.js`):
+ * `module.exports.controllers.blueprints.actions = false`
+ *
+ * All of your controllers ' actions are automatically bound to a route.  For example:
  *   + If you have a controller, `FooController`:
  *     + its action `bar` is accessible at `/foo/bar`
  *     + its action `index` is accessible at `/foo/index`, and also `/foo`
@@ -118,55 +124,44 @@ module.exports.routes = {
 
 
 /**
- * (4) View blueprints
- *
- * These routes can be disabled by setting (in config/controllers.js):
- *		`module.exports.views.blueprints = false`
- *
- * If you have a view file at `/views/foo/bar.ejs`, it will be rendered and served
- * automatically via the route:  `/foo/bar`
- *
- */
-
-/**
- * (5) Shortcut CRUD blueprints
+ * (4) Shortcut CRUD blueprints
  *
  * These routes can be disabled by setting (in config/controllers.js)
- *			`module.exports.controllers.blueprints.shortcuts = false`
+ *      `module.exports.controllers.blueprints.shortcuts = false`
  *
  * If you have a model, `Foo`, and a controller, `FooController`,
  * you can access CRUD operations for that model at:
- *		/foo/find/:id?	->	search lampshades using specified criteria or with id=:id
+ *    /foo/find/:id?  ->  search lampshades using specified criteria or with id=:id
  *
- *		/foo/create		->	create a lampshade using specified values
+ *    /foo/create   ->  create a lampshade using specified values
  *
- *		/foo/update/:id	->	update the lampshade with id=:id
+ *    /foo/update/:id ->  update the lampshade with id=:id
  *
- *		/foo/destroy/:id	->	delete lampshade with id=:id
+ *    /foo/destroy/:id  ->  delete lampshade with id=:id
  *
  */
 
 /**
- * (6) REST blueprints
+ * (5) REST blueprints
  *
  * These routes can be disabled by setting (in config/controllers.js)
- *		`module.exports.controllers.blueprints.rest = false`
+ *    `module.exports.controllers.blueprints.rest = false`
  *
  * If you have a model, `Foo`, and a controller, `FooController`,
  * you can access CRUD operations for that model at:
  *
- *		get /foo/:id?	->	search lampshades using specified criteria or with id=:id
+ *    get /foo/:id? ->  search lampshades using specified criteria or with id=:id
  *
- *		post /foo		-> create a lampshade using specified values
+ *    post /foo   -> create a lampshade using specified values
  *
- *		put /foo/:id	->	update the lampshade with id=:id
+ *    put /foo/:id  ->  update the lampshade with id=:id
  *
- *		delete /foo/:id	->	delete lampshade with id=:id
+ *    delete /foo/:id ->  delete lampshade with id=:id
  *
  */
 
 /**
- * (7) Static assets
+ * (6) Static assets
  *
  * Flat files in your `assets` directory- (these are sometimes referred to as 'public')
  * If you have an image file at `/assets/images/foo.jpg`, it will be made available
@@ -177,6 +172,8 @@ module.exports.routes = {
 
 
 /**
+ * (7) 404 (not found) handler
+ *
  * Finally, if nothing else matched, the default 404 handler is triggered.
  * See `config/404.js` to adjust your app's 404 logic.
  */
