@@ -15,7 +15,7 @@ module.exports = {
         uid: 'INTEGER',
         name: 'STRING',
         email: 'STRING',
-        fistname: 'STRING',
+        firstname: 'STRING',
         lastname: 'STRING'
     }
 
