@@ -1,4 +1,4 @@
-# Sails.js Social Auth example with Passport and MongoDB
+# Sails.js Social Auth example with Passport and MongoDB [![Dependency Status][daviddm-url]][daviddm-image]
 
 ## Requirements
 
@@ -67,6 +67,6 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-
+[daviddm-url]: https://david-dm.org/stefanbuck/sails-social-auth-example.png?theme=shields.io
+[daviddm-image]: https://david-dm.org/stefanbuck/sails-social-auth-example
 ![Analytics](https://ga-beacon.appspot.com/UA-40473036-6/sails-social-auth-example/readme?pixel)
-
