@@ -16,16 +16,14 @@ module.exports.sockets = {
   // mixes in socket.io events for your routes and blueprints automatically.
   onConnect: function(session, socket) {
 
-    // By default: do nothing
-    // This is a good place to subscribe a new socket to a room, inform other users that
-    // someone new has come online, or any other custom socket.io logic
+    // By default, do nothing.
+    
   },
 
   // This custom onDisconnect function will be run each time a socket disconnects
   onDisconnect: function(session, socket) {
 
-    // By default: do nothing
-    // This is a good place to broadcast a disconnect message, or any other custom socket.io logic
+    // By default: do nothing.
   },
 
 
@@ -80,22 +78,24 @@ module.exports.sockets = {
   // Global authorization for Socket.IO access, 
   // this is called when the initial handshake is performed with the server.
   // 
-  // By default (`authorization: true`), when a socket tries to connect, Sails verifies
-  // that a valid cookie was sent with the upgrade request.  If the cookie doesn't match
-  // any known user session, a new user session is created for it.
+  // By default (`authorization: false`), when a socket tries to connect, Sails
+  // allows it, every time.  If no valid cookie was sent, a temporary session will
+  // be created for the connecting socket.
+  // 
+  // If `authorization: true`, before allowing a connection, Sails verifies that a 
+  // valid cookie was sent with the upgrade request.  If the cookie doesn't match
+  // any known user session, a new user session is created for it. (In most cases, the
+  // user would already have a cookie since they loaded the socket.io client and the initial
+  // HTML page.)
   //
   // However, in the case of cross-domain requests, it is possible to receive a connection
   // upgrade request WITHOUT A COOKIE (for certain transports)
   // In this case, there is no way to keep track of the requesting user between requests,
   // since there is no identifying information to link him/her with a session.
+  // The sails.io.js client solves this by connecting to a CORS endpoint first to get a
+  // 3rd party cookie (fortunately this works, even in Safari), then opening the connection.
   //
-  // If you don't care about keeping track of your socket users between requests,
-  // you can bypass this cookie check by setting `authorization: false`
-  // which will disable the session for socket requests (req.session is still accessible 
-  // in each request, but it will be empty, and any changes to it will not be persisted)
-  //
-  // On the other hand, if you DO need to keep track of user sessions, 
-  // you can pass along a ?cookie query parameter to the upgrade url, 
+  // You can also pass along a ?cookie query parameter to the upgrade url, 
   // which Sails will use in the absense of a proper cookie
   // e.g. (when connection from the client):
   // io.connect('http://localhost:1337?cookie=smokeybear')
@@ -117,7 +117,7 @@ module.exports.sockets = {
         // to report an error, call `cb(err)`
     }
   */
-  authorization: true,
+  authorization: false,
 
   // Match string representing the origins that are allowed to connect to the Socket.IO server
   origins: '*:*',

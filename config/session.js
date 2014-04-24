@@ -15,8 +15,16 @@ module.exports.session = {
   // Session secret is automatically generated when your new app is created
   // Replace at your own risk in production-- you will invalidate the cookies of your users,
   // forcing them to log in again. 
-  secret: '084c9abb7ba74a2c06ad713c4555d5f4',
+  secret: '0310820f46ee0bafd22cd9c583f36c41',
 
+
+  // Set the session cookie expire time
+  // The maxAge is set by milliseconds, the example below is for 24 hours
+  //
+  // cookie: {
+  //   maxAge: 24 * 60 * 60 * 1000  
+  // }
+  
 
   // In production, uncomment the following lines to set up a shared redis session store
   // that can be shared across multiple Sails.js servers
@@ -35,17 +43,12 @@ module.exports.session = {
 
 
   // Uncomment the following lines to use your Mongo adapter as a session store
-  adapter: 'mongo',
-
-  host: 'localhost',
-  port: 27017,
-  db: 'sails-social-auth',
-  collection: 'sessions',
-
-  cookie: {
-    originalMaxAge: 900000 // 15 min
-  }
-
+  // adapter: 'mongo',
+  //
+  // host: 'localhost',
+  // port: 27017,
+  // db: 'sails',
+  // collection: 'sessions',
   //
   // Optional Values:
   //
@@ -57,4 +60,5 @@ module.exports.session = {
   // auto_reconnect: false,
   // ssl: false,
   // stringify: true
+
 };
