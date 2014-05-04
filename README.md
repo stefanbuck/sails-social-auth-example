@@ -7,16 +7,18 @@
 
 ## Setup
 
-1. `git clone https://github.com/stefanbuck/sails-social-auth-example.git`
-2. `cd sails-social-auth-example`
-3. `npm install`
-4. Start your MongoDB from the command line `sudo mongod`
-5. Setup your strategies
+1. Clone the repository `git clone https://github.com/stefanbuck/sails-social-auth-example.git`
+1. Navigate into the directory `cd sails-social-auth-example`
+1. Run `npm install`  to install the dependencies
+1. Set up your MongoDB settings `config/connections.js`
+1. Start your MongoDB from the command line with `sudo mongod`
+1. Set up your strategies
    - [Google+](#google)
    - [GitHub](#github)
-   - [Facebook](#facebook)
-8. `sails lift`
-9. Open `http://localhost:1337` in your favorite browser
+   - [Twitter](#twitter)
+   - [Facebook](#facebook)   
+1. Start sails with `sails lift`
+1. Open `http://localhost:1337` in your browser
 
 ## Available authentication strategies
 
@@ -25,14 +27,14 @@
    - Name ```sails-social-auth-example```
    - URL ```http://localhost:1337```
    - Callback URL ```http://localhost:1337/auth/google/callback```
-1. In the `config/middleware.js` replace `YOUR_CLIENT_ID` and `YOUR_CLIENT_SECRET` with the generated keys
+1. In the `config/express.js` replace `YOUR_CLIENT_ID` and `YOUR_CLIENT_SECRET` with the generated keys
 
 ### GitHub
 1. Create a new app [here](https://github.com/settings/applications/new)
    - Name ```sails-social-auth-example```
    - URL ```http://localhost:1337```
    - Callback URL ```http://localhost:1337/auth/github/callback```
-1. In the `config/middleware.js` replace `YOUR_CLIENT_ID` and `YOUR_CLIENT_SECRET` with the generated keys
+1. In the `config/express.js` replace `YOUR_CLIENT_ID` and `YOUR_CLIENT_SECRET` with the generated keys
 
 ### Facebook
 
@@ -40,7 +42,15 @@
    - Name ```sails-social-auth-example```
    - URL ```http://localhost:1337```
    - Callback URL ```http://localhost:1337/auth/facebook/callback```
-1. In the `config/middleware.js` replace `YOUR_CLIENT_ID` and `YOUR_CLIENT_SECRET` with the generated keys
+1. In the `config/express.js` replace `YOUR_CLIENT_ID` and `YOUR_CLIENT_SECRET` with the generated keys
+
+### Twitter
+
+1. Create a new app [here](https://apps.twitter.com/app/new)
+   - Name ```sails-social-auth-example```
+   - URL ```http://localhost:1337```
+   - Callback URL ```http://localhost:1337/auth/twitter/callback```
+1. In the `config/express.js` replace `YOUR_CLIENT_ID` and `YOUR_CLIENT_SECRET` with the generated keys
 
 
 
@@ -48,7 +58,7 @@
 
 The MIT License (MIT)
 
-Copyright (c) 2013 Stefan Buck
+Copyright (c) 2014 Stefan Buck
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in

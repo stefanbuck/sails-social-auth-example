@@ -1,7 +1,8 @@
 var passport = require('passport')
     , GitHubStrategy = require('passport-github').Strategy
     , FacebookStrategy = require('passport-facebook').Strategy
-    , GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+    , GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
+    , TwitterStrategy = require('passport-twitter').Strategy;
 
 
 var verifyHandler = function(token, tokenSecret, profile, done) {
@@ -72,6 +73,12 @@ module.exports.express = {
       clientID: 'YOUR_CLIENT_ID',
       clientSecret: 'YOUR_CLIENT_SECRET',
       callbackURL: 'http://localhost:1337/auth/google/callback'
+    }, verifyHandler));
+
+    passport.use(new TwitterStrategy({
+      consumerKey: 'YOUR_CLIENT_ID',
+      consumerSecret: 'YOUR_CLIENT_SECRET',
+      callbackURL: 'http://localhost:1337/auth/twitter/callback'
     }, verifyHandler));
 
     app.use(passport.initialize());
