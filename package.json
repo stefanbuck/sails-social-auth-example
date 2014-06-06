@@ -23,6 +23,7 @@
     "passport-facebook": "^1.0.3",
     "passport-github": "^0.1.5",
     "passport-google-oauth": "^0.1.5",
+    "passport-twitter": "^1.0.2",
     "rc": "~0.3.3",
     "sails": "~0.10.0-rc5",
     "sails-disk": "~0.10.0",

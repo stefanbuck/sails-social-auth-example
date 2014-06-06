@@ -23,7 +23,7 @@ var verifyHandler = function(token, tokenSecret, profile, done) {
           data.email = profile.emails[0].value;
         }
         if (profile.name && profile.name.givenName) {
-          data.fistname = profile.name.givenName;
+          data.firstname = profile.name.givenName;
         }
         if (profile.name && profile.name.familyName) {
           data.lastname = profile.name.familyName;
