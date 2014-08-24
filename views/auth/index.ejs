@@ -1,59 +1,49 @@
 <!-- Default home page -->
-<!-- <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,700italic,400,300,700' rel='stylesheet'/> -->
-<link href='http://sailsjs.org/styles/fonts.css' rel='stylesheet'/>
-<link href='../styles/main.css' rel='stylesheet'/>
-<!--[if IE 7]>
-<link href='../styles/ie7.css' rel='stylesheet'/>
-<![endif]-->
+<link type="text/css" href='http://sailsjs.org/styles/fonts.css' rel='stylesheet'/>
+<script type="text/javascript">
+  setTimeout(function sunrise() {
+    document.getElementsByClassName('header')[0].style.backgroundColor = '#118798';
+  }, 0);
+</script>
 
-<div class="top-bar">
-    <div class="container clearfix">
-        <img class="logo" src="http://sailsjs.org/images/sails-logo.jpg" />
+<div class="default-page">
+  <div class="header">
+    <h1 id="main-title" class="container"><%= __('A brand new app.') %></h1>
+
+    <h3 class="container">You're looking at: <code><%= view.pathFromApp + '.' + view.ext %></code></h3>
+  </div>
+  <div class="main container clearfix">
+    <!-- <h1>Getting started</h1>
+    <p>Don't worry, we've got your back.</p> -->
+
+    <div class="content">
+      <h1 id="main-title">Please sign in</h1>
+
+      <a href="/auth/github/" class="btn">with GitHub</a>
+      <a href="/auth/facebook/" class="btn">with Facebook</a>
+      <a href="/auth/google/" class="btn">with Google+</a>
+      <a href="/auth/twitter/" class="btn">with Twitter</a>
     </div>
-</div>
 
-<div class="container clearfix">
-    <div class="main">
-        <h1 id="main-title">Please sign in</h1>
+    <div class="links">
+      <!-- <h3>Links</h3> -->
+      <ul class="link-list">
 
-        <a href="/auth/github/" class="btn">with GitHub</a>
+        <h4>Docs</h4>
+        <a target="_blank" href="http://sailsjs.org/#/documentation/anatomy/myApp"><li>App Structure</li></a>
+        <a target="_blank" href="http://sailsjs.org/#/documentation/reference"><li>Reference</li></a>
+        <a target="_blank" href="http://sailsjs.org/#/documentation/concepts/extending-sails/Adapters/adapterList.html"><li>Supported Databases</li></a>
 
-        <a href="/auth/facebook/" class="btn">with Facebook</a>
+        <h4>Tutorials</h4>
+        <a target="_blank" href="http://links.sailsjs.org/community/sails101"><li>Sails 101</li></a>
 
-        <a href="/auth/google/" class="btn">with Google+</a>
+        <h4>Community</h4>
+        <a target="_blank" href="http://stackoverflow.com/search?q=sails.js"><li>StackOverFlow</li></a>
+        <a target="_blank" href="https://github.com/balderdashy/sails"><li>GitHub</li></a>
+        <a target="_blank" href="https://groups.google.com/forum/#!forum/sailsjs"><li>Google Group</li></a>
+        <a target="_blank" href="http://webchat.freenode.net/"><li>IRC (#sailsjs on freenode)</li></a>
 
-        <div class="delete">
-            <div class="sprite">You're looking at: <span class="boxy">views/auth/index.ejs</span></div>
-        </div>
+      </ul>
     </div>
-    <div class="side-bar">
-        <h4 id="new">
-            New to Sails?
-        </h4>
-        <ul>
-            <li>
-                <a href="http://sailsjs.org">Visit sailsjs.org</a>
-            </li>
-            <li>
-                <a href="http://sailsjs.org/#documentation">Documentation</a>
-            </li>
-        </ul>
-        <h4>
-            Next Steps
-        </h4>
-        <ul>
-            <li class="sprite single_page">
-                <a target="_blank" href="http://sailsjs.org">Build a single page app</a>
-            </li>
-            <li class="sprite traditional">
-                <a target="_blank" href="http://sailsjs.org">Build a traditional webapp</a>
-            </li>
-            <li class="sprite realtime">
-                <a target="_blank" href="http://sailsjs.org">Build a realtime app</a>
-            </li>
-            <li class="sprite api">
-                <a target="_blank" href="http://sailsjs.org">Build an API</a>
-            </li>
-        </ul>
-    </div>
+  </div>
 </div>
