@@ -5,14 +5,14 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
  * sails.io.js
  * ------------------------------------------------------------------------
  * JavaScript Client (SDK) for communicating with Sails.
- * 
+ *
  * Note that this script is completely optional, but it is handy if you're
  * using WebSockets from the browser to talk to your Sails server.
- * 
+ *
  * For tips and documentation, visit:
  * http://sailsjs.org/#!documentation/reference/BrowserSDK/BrowserSDK.html
  * ------------------------------------------------------------------------
- * 
+ *
  * This file allows you to send and receive socket.io messages to & from Sails
  * by simulating a REST client interface on top of socket.io. It models its API
  * after the $.ajax pattern from jQuery you might already be familiar with.
@@ -31,10 +31,12 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
   // (skip this if this SDK is being used outside of the DOM, i.e. in a Node process)
   var urlThisScriptWasFetchedFrom = (function() {
     if (
-     typeof window !== 'object' ||
-     typeof window.document !== 'object' ||
-     typeof window.document.getElementsByTagName !== 'function'
-    ) { return ''; }
+      typeof window !== 'object' ||
+      typeof window.document !== 'object' ||
+      typeof window.document.getElementsByTagName !== 'function'
+    ) {
+      return '';
+    }
 
     // Return the URL of the last script loaded (i.e. this one)
     // (this must run before nextTick; see http://stackoverflow.com/a/2976714/486547)
@@ -108,20 +110,51 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
 
     function TmpSocket() {
       var boundEvents = {};
-      this.on = function(evName, fn) {
-        boundEvents[evName] = fn;
+      this.on = function (evName, fn) {
+        if (!boundEvents[evName]) boundEvents[evName] = [fn];
+        else boundEvents[evName].push(fn);
         return this;
       };
       this.become = function(actualSocket) {
+
+        // Pass events and a reference to the request queue
+        // off to the actualSocket for consumption
         for (var evName in boundEvents) {
-          actualSocket.on(evName, boundEvents[evName]);
+          for (var i in boundEvents[evName]) {
+            actualSocket.on(evName, boundEvents[evName][i]);
+          }
         }
+        actualSocket.requestQueue = this.requestQueue;
+
+        // Bind a one-time function to run the request queue
+        // when the actualSocket connects.
+        if (!_isConnected(actualSocket)) {
+          var alreadyRanRequestQueue = false;
+          actualSocket.on('connect', function onActualSocketConnect() {
+            if (alreadyRanRequestQueue) return;
+            runRequestQueue(actualSocket);
+            alreadyRanRequestQueue = true;
+          });
+        }
+        // Or run it immediately if actualSocket is already connected
+        else {
+          runRequestQueue(actualSocket);
+        }
+
         return actualSocket;
       };
+
+      // Uses `this` instead of `TmpSocket.prototype` purely
+      // for convenience, since it makes more sense to attach
+      // our extra methods to the `Socket` prototype down below.
+      // This could be optimized by moving those Socket method defs
+      // to the top of this SDK file instead of the bottom.  Will
+      // gladly do it if it is an issue for anyone.
       this.get = Socket.prototype.get;
       this.post = Socket.prototype.post;
       this.put = Socket.prototype.put;
-      this.delete = Socket.prototype.delete;
+      this['delete'] = Socket.prototype['delete'];
+      this.request = Socket.prototype.request;
       this._request = Socket.prototype._request;
     }
 
@@ -136,43 +169,48 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
      * @factory
      */
     function LoggerFactory(options) {
-      options = options||{ prefix: true };
+      options = options || {
+        prefix: true
+      };
 
       // If `console.log` is not accessible, `log` is a noop.
       if (
-       typeof console !== 'object' ||
-       typeof console.log !== 'function' ||
-       typeof console.log.bind !== 'function'
-      )
-      {
+        typeof console !== 'object' ||
+        typeof console.log !== 'function' ||
+        typeof console.log.bind !== 'function'
+      ) {
         return function noop() {};
       }
 
-      return function log () {
+      return function log() {
         var args = Array.prototype.slice.call(arguments);
-        
+
         // All logs are disabled when `io.sails.environment = 'production'`.
         if (io.sails.environment === 'production') return;
 
         // Add prefix to log messages (unless disabled)
         var PREFIX = '';
-        if (options.prefix) { args.unshift(PREFIX); }
+        if (options.prefix) {
+          args.unshift(PREFIX);
+        }
 
         // Call wrapped logger
         console.log
-         .bind(console)
-         .apply(this, args);
+          .bind(console)
+          .apply(this, args);
       };
     }
 
     // Create a private logger instance
     var consolog = LoggerFactory();
-    consolog.noPrefix = LoggerFactory({ prefix: false });
+    consolog.noPrefix = LoggerFactory({
+      prefix: false
+    });
 
 
 
     /**
-     * isConnected
+     * _isConnected
      *
      * @api private
      * @param  {Socket}  socket
@@ -187,34 +225,70 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
 
 
     /**
-     * [ajax description]
-     * @return {[type]} [description]
+     * What is the `requestQueue`?
+     * 
+     * The request queue is used to simplify app-level connection logic--
+     * i.e. so you don't have to wait for the socket to be connected
+     * to start trying to  synchronize data.
+     * 
+     * @api private
+     * @param  {Socket}  socket
      */
-    function ajax (opts, cb) {
+
+    function runRequestQueue (socket) {
+      var queue = socket.requestQueue;
+
+      if (!queue) return;
+      for (var i in queue) {
+
+        // Double-check that `queue[i]` will not
+        // inadvertently discover extra properties attached to the Object
+        // and/or Array prototype by other libraries/frameworks/tools.
+        // (e.g. Ember does this. See https://github.com/balderdashy/sails.io.js/pull/5)
+        var isSafeToDereference = ({}).hasOwnProperty.call(queue, i);
+        if (isSafeToDereference) {
+          // Emit the request.
+          _emitFrom(socket, queue[i]);
+        }
+      }
+    }
+
+
+
+    /**
+     * Send an AJAX request.
+     * 
+     * @param  {Object}   opts [optional]
+     * @param  {Function} cb
+     * @return {XMLHttpRequest}
+     */
+
+    function ajax(opts, cb) {
       opts = opts || {};
       var xmlhttp;
 
       if (typeof window === 'undefined') {
-        // TODO: refactor node usage in here
+        // TODO: refactor node usage to live in here
         return cb();
       }
 
       if (window.XMLHttpRequest) {
-          // code for IE7+, Firefox, Chrome, Opera, Safari
-          xmlhttp = new XMLHttpRequest();
+        // code for IE7+, Firefox, Chrome, Opera, Safari
+        xmlhttp = new XMLHttpRequest();
       } else {
-          // code for IE6, IE5
-          xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        // code for IE6, IE5
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
       }
 
       xmlhttp.onreadystatechange = function() {
-          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-              cb(xmlhttp.responseText);
-          }
-      }
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+          cb(xmlhttp.responseText);
+        }
+      };
 
       xmlhttp.open(opts.method, opts.url, true);
       xmlhttp.send();
+      return xmlhttp;
     }
 
 
@@ -284,7 +358,9 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
         }
 
         // Send back (emulatedHTTPBody, jsonWebSocketResponse)
-        cb && cb(body, new JWR(responseCtx));
+        if (cb) {
+          cb(body, new JWR(responseCtx));
+        }
       });
     }
 
@@ -413,6 +489,41 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
 
 
     /**
+     * Simulate an HTTP request to sails
+     * e.g.
+     *    `socket.request('/user', newUser, $spinner.hide, 'post')`
+     *
+     * @api public
+     * @param {String} url    ::    destination URL
+     * @param {Object} params ::    parameters to send with the request [optional]
+     * @param {Function} cb   ::    callback function to call when finished [optional]
+     * @param {String} method ::    HTTP request method [optional]
+     */
+
+    Socket.prototype.request = function(url, data, cb, method) {
+
+      // `cb` is optional
+      if (typeof cb === 'string') {
+        method = cb;
+        cb = null;
+      }
+
+      // `data` is optional
+      if (typeof data === 'function') {
+        cb = data;
+        data = {};
+      }
+
+      return this._request({
+        method: method || 'get',
+        data: data,
+        url: url
+      }, cb);
+    };
+
+
+
+    /**
      * Socket.prototype._request
      *
      * Simulate HTTP over Socket.io.
@@ -438,8 +549,6 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
         throw new Error('Invalid or missing URL!\n' + usage);
       }
 
-      var self = this;
-
       // Build a simulated request object.
       var request = {
         method: options.method,
@@ -452,37 +561,20 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
       // If this socket is not connected yet, queue up this request
       // instead of sending it.
       // (so it can be replayed when the socket comes online.)
-      if (!_isConnected(self)) {
+      if (!_isConnected(this)) {
 
         // If no queue array exists for this socket yet, create it.
-        requestQueues[self.id] = requestQueues[self.id] || [];
-        requestQueues[self.id].push(request);
+        this.requestQueue = this.requestQueue || [];
+        this.requestQueue.push(request);
         return;
       }
 
 
       // Otherwise, our socket is ok!
       // Send the request.
-      _emitFrom(self, request);
+      _emitFrom(this, request);
     };
 
-
-
-    // `requestQueues` and `sockets`
-    // 
-    // Used to simplify app-level connection logic-- i.e. so you don't
-    // have to wait for the socket to be connected to start trying to 
-    // synchronize data.
-    // 
-    // It supports use across multiple sockets, and ends up looking
-    // something like:
-    // {
-    //   '9ha021381359': [{...queuedReq26...}, {...queuedReq27...}, ...],
-    //   '2abcd8d8d211': [{...queuedReq18...}, {...queuedReq19...}, ...],
-    //   '992294111131': [{...queuedReq11...}, {...queuedReq12...}, ...]
-    // }
-    var requestQueues = {};
-    var sockets = {};
 
 
     // Set a `sails` object that may be used for configuration before the
@@ -529,7 +621,7 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
       // the connection request to the server:
       if (typeof opts.query !== 'string') opts.query = SDK_INFO.versionString;
       else opts.query += '&' + SDK_INFO.versionString;
-      
+
       return io.sails._origConnectFn(url, opts);
 
     };
@@ -563,6 +655,7 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
       // that a valid cookie is available.  This can be disabled
       // by setting `io.sails.useCORSRouteToGetCookie` to false.
       var isXOrigin = io.sails.url && true; //url.match();
+      // TODO: check whether the URL is cross-domain
 
       // var port = global.location.port || ('https:' == global.location.protocol ? 443 : 80);
       // this.options.host !== global.location.hostname || this.options.port != port;
@@ -579,21 +672,6 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
 
         // Make the AJAX request (CORS)
         if (typeof window !== 'undefined') {
-          // var script = window.document.createElement('script');
-          // script.src = io.sails.url + xOriginCookieRoute;
-          // script.async = true;
-
-          // // Wait for script tag to finish loading
-          // // (to guarantee we have the cookie)
-          // var isReady = false;
-          // script.onreadystatechange = script.onload = function() {
-          //   var state = script.readyState;
-          //   if (!isReady && (!state || /loaded|complete/.test(state))) {
-          //     isReady = true;
-          //     goAheadAndActuallyConnect();
-          //   }
-          // };
-          // window.document.getElementsByTagName('head')[0].appendChild(script);
 
           ajax({
             url: xOriginCookieURL,
@@ -607,24 +685,23 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
         // way.
         else {
           var mikealsReq = require('request');
-          mikealsReq.get(io.sails.url + xOriginCookieRoute, function (err, httpResponse, body) {
+          mikealsReq.get(io.sails.url + xOriginCookieRoute, function(err, httpResponse, body) {
             if (err) {
               consolog(
-               'Failed to connect socket (failed to get cookie)',
-               'Error:', err
+                'Failed to connect socket (failed to get cookie)',
+                'Error:', err
               );
               return;
             }
             goAheadAndActuallyConnect();
           });
         }
-      }
-      else goAheadAndActuallyConnect();
-      
+      } else goAheadAndActuallyConnect();
+
       // Start connecting after the current cycle of the event loop
       // has completed.
       // consolog('Auto-connecting `io.socket` to Sails... (requests will be queued in the mean-time)');
-      function goAheadAndActuallyConnect () {
+      function goAheadAndActuallyConnect() {
 
         // Initiate connection
         var actualSocket = io.connect(io.sails.url);
@@ -640,61 +717,76 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
         io.socket.on('connect', function socketConnected() {
 
           consolog.noPrefix(
-           '\n' +
-           '    |>    ' + '\n' +
-           '  \\___/  '
+            '\n' +
+            '    |>    ' + '\n' +
+            '  \\___/  '
           );
           consolog(
-           '`io.socket` connected successfully.'+ '\n' +
-           // 'e.g. to send a GET request to Sails via WebSockets, run:'+ '\n' +
-           // '`io.socket.get("/foo", function serverRespondedWith (body, jwr) { console.log(body); })`'+ '\n' +
-           ' (for help, see: http://sailsjs.org/#!documentation/reference/BrowserSDK/BrowserSDK.html)'
+            '`io.socket` connected successfully.' + '\n' +
+            // 'e.g. to send a GET request to Sails via WebSockets, run:'+ '\n' +
+            // '`io.socket.get("/foo", function serverRespondedWith (body, jwr) { console.log(body); })`'+ '\n' +
+            ' (for help, see: http://sailsjs.org/#!documentation/reference/BrowserSDK/BrowserSDK.html)'
           );
           // consolog('(this app is running in development mode - log messages will be displayed)');
 
-          // Save reference to socket when it connects
-          sockets[io.socket.id] = io.socket;
 
-          // Run the request queue for each socket.
-          for (var socketId in requestQueues) {
-            var pendingRequestsForSocket = requestQueues[socketId];
+          if (!io.socket.$events.disconnect) {
+            io.socket.on('disconnect', function() {
+              consolog('====================================');
+              consolog('io.socket was disconnected from Sails.');
+              consolog('Usually, this is due to one of the following reasons:' + '\n' +
+                ' -> the server ' + (io.sails.url ? io.sails.url + ' ' : '') + 'was taken down' + '\n' +
+                ' -> your browser lost internet connectivity');
+              consolog('====================================');
+            });
+          }
 
-            for (var i in pendingRequestsForSocket) {
-              var pendingRequest = pendingRequestsForSocket[i];
+          if (!io.socket.$events.reconnect) {
+            io.socket.on('reconnect', function(transport, numAttempts) {
+              var numSecsOffline = io.socket.msSinceConnectionLost / 1000;
+              consolog(
+                'io.socket reconnected successfully after being offline ' +
+                'for ' + numSecsOffline + ' seconds.');
+            });
+          }
 
-              // Emit the request.
-              _emitFrom(sockets[socketId], pendingRequest);
-            }
+          if (!io.socket.$events.reconnecting) {
+            io.socket.on('reconnecting', function(msSinceConnectionLost, numAttempts) {
+              io.socket.msSinceConnectionLost = msSinceConnectionLost;
+              consolog(
+                'io.socket is trying to reconnect to Sails...' +
+                '(attempt #' + numAttempts + ')');
+            });
           }
 
 
+          // 'error' event is triggered if connection can not be established.
+          // (usually because of a failed authorization, which is in turn
+          // usually due to a missing or invalid cookie)
+          if (!io.socket.$events.error) {
+            io.socket.on('error', function failedToConnect(err) {
 
-          /**
-           * 'disconnect' event is triggered when the socket disconnects.
-           */
-          io.socket.on('disconnect', function() {
-            consolog('io.socket was disconnected from Sails.');
-          });
+              // TODO:
+              // handle failed connections due to failed authorization
+              // in a smarter way (probably can listen for a different event)
 
+              // A bug in Socket.io 0.9.x causes `connect_failed`
+              // and `reconnect_failed` not to fire.
+              // Check out the discussion in github issues for details:
+              // https://github.com/LearnBoost/socket.io/issues/652
+              // io.socket.on('connect_failed', function () {
+              //  consolog('io.socket emitted `connect_failed`');
+              // });
+              // io.socket.on('reconnect_failed', function () {
+              //  consolog('io.socket emitted `reconnect_failed`');
+              // });
 
-
-
-          /**
-           * 'error' event is triggered if connection can not be established.
-           * (usually because of a failed authorization, which is in turn
-           * usually due to a missing or invalid cookie)
-           */
-          io.socket.on('error', function failedToConnect(err) {
-            
-            // TODO:
-            // handle failed connections due to failed authorization
-            // in a smarter way (probably can listen for a different event)
-            
-            consolog(
-             'Failed to connect socket (probably due to failed authorization on server)',
-             'Error:', err
-            );
-          });
+              consolog(
+                'Failed to connect socket (probably due to failed authorization on server)',
+                'Error:', err
+              );
+            });
+          }
         });
 
       }
@@ -718,7 +810,8 @@ var io="undefined"==typeof module?{}:module.exports;(function(){(function(a,b){v
 
   // Add CommonJS support to allow this client SDK to be used from Node.js.
   if (typeof module === 'object' && typeof module.exports !== 'undefined') {
-    return module.exports = SailsIOClient;
+    module.exports = SailsIOClient;
+    return SailsIOClient;
   }
 
   // Otherwise, try to instantiate the client:
