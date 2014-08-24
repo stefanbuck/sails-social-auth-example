@@ -43,7 +43,7 @@ passport.serializeUser(function(user, done) {
 
 passport.deserializeUser(function(uid, done) {
   User.findOne({uid: uid}, function(err, user) {
-    done(err, user)
+    done(err, user);
   });
 });
 
@@ -53,7 +53,7 @@ passport.deserializeUser(function(uid, done) {
  * For more information on configuration, check out:
  * http://sailsjs.org/#documentation
  */
-module.exports.express = {
+module.exports.http = {
 
   customMiddleware: function(app) {
 
