@@ -28,8 +28,6 @@
     "passport-google-oauth": "^0.1.5",
     "passport-twitter": "^1.0.2",
     "rc": "~0.3.3",
-    "sails": "~0.10.0",
-    "sails-disk": "~0.10.0",
     "sails-mongo": "^0.10.0",
     "connect-mongo": "^0.4.1"
   },
